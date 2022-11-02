@@ -24,9 +24,9 @@
 /frontend/yarn-error.log*
 
 # backend ignores
-/backend/HELP.md
-/backend/target/
-!backend/.mvn/wrapper/maven-wrapper.jar
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
