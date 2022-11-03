@@ -39,13 +39,13 @@ public class CUserController
         user.setUsername(registerCredentials.getUsername());
         user.setEmail(registerCredentials.getEmail());
         user.setPassword(passwordEncoder.encode(registerCredentials.getPassword()));
-        user.setRole(Set.of(Role.ROLE_USER));
+        user.setRole(Set.of(Role.ROLE_ADMIN));
         user.setEnabled(true);
         cUserService.save(user);
     }
 
 
-    @GetMapping("/user")
+    @GetMapping("/cuser")
     public String userEndpoint()
     {
         return "Hello, user";
