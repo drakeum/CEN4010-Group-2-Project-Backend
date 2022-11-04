@@ -25,7 +25,7 @@ public class CUserController
     private final CUserServiceImpl cUserService;
     private final PasswordEncoder passwordEncoder;
 
-    @GetMapping("/getAll")
+    @GetMapping("admin/getAll")
     public List<CUser> getAllCUsers()
     {
         return cUserRepository.findAll();

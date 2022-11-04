@@ -23,7 +23,7 @@ public class PMSSecurity
     @Autowired
     private AuthenticationManager authenticationManager;
     private final AuthSuccessHandler authSuccessHandler;
-    private CUserDetailsService cUserDetailsService;
+    private final CUserDetailsService cUserDetailsService;
     private final String secret;
 
     public PMSSecurity(AuthSuccessHandler authSuccessHandler, CUserDetailsService cUserDetailsService, @Value("${jwt_secret}") String secret)
@@ -45,8 +45,8 @@ public class PMSSecurity
                     try
                     {
                         auth
-                                .antMatchers("/cuser").hasRole("USER")
-                                .antMatchers("/admin").hasRole("ADMIN")
+                                .antMatchers("/cuser/*").hasRole("USER")
+                                .antMatchers("/admin/*").hasRole("ADMIN")
                                 .anyRequest().permitAll()
                                 .and()
                                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -73,4 +73,5 @@ public class PMSSecurity
         filter.setAuthenticationManager(authenticationManager);
         return filter;
     }
+
 }

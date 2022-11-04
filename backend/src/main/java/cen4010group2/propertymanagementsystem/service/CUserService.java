@@ -10,5 +10,4 @@ public interface CUserService
     public CUser save(CUser user);
     public CUser getCUserByEmail(String email);
     public CUser getCUserByUsername(String username);
-
 }

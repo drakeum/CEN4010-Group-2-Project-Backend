@@ -20,12 +20,11 @@ import java.sql.Timestamp;
 public class Property
 {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "pid")
     private Long id;
 
     private String name;
-
-    private String ownerName;
 
     private Long ownerAccountID;
 
