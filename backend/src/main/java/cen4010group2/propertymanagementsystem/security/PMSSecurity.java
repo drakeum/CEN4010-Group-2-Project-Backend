@@ -45,7 +45,7 @@ public class PMSSecurity
                     try
                     {
                         auth
-                                .antMatchers("/cuser/*").hasRole("USER")
+                                .antMatchers("/cuser/*").hasAnyRole("USER", "ADMIN")
                                 .antMatchers("/admin/*").hasRole("ADMIN")
                                 .anyRequest().permitAll()
                                 .and()
