@@ -70,15 +70,5 @@ public class CUserController
         return u.getRole();
     }
 
-    /*@GetMapping("/cuser")
-    public String userEndpoint()
-    {
-        return "Hello, user";
-    }
 
-    @GetMapping("/admin")
-    public String adminEndpoint()
-    {
-        return "Hello, admin";
-    }*/
 }

@@ -9,10 +9,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
@@ -43,6 +40,7 @@ public class PropertyController
         return propertyService.getAllProperties();
     }
 
+
     @PostMapping("/cuser/addProperty")
     public void addProperty(@RequestBody NewProperty newProperty, HttpServletRequest request)
     {
@@ -64,5 +62,15 @@ public class PropertyController
         propertyService.saveProperty(p);
     }
 
-
+    @GetMapping("/cuser/getProperties")
+    public List<Property> getProperties(HttpServletRequest request)
+    {
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String email = JWT.require(Algorithm.HMAC256(secret))
+                .build()
+                .verify(token.replace(TOKEN_PREFIX, ""))
+                .getSubject();
+        CUser u = cUserService.getCUserByEmail(email);
+        return propertyService.getPropertiesByUser(u);
+    }
 }
