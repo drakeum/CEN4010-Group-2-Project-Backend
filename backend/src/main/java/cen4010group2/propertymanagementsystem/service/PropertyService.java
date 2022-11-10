@@ -12,6 +12,7 @@ public interface PropertyService
 {
     public List<Property> getAllProperties();
 
+    public Property getPropertyById(Long id);
     public Property saveProperty(Property property);
 
     public List<Property> getPropertiesByUser(CUser user);

@@ -53,7 +53,7 @@ public class CUserController
         user.setUsername(registerCredentials.getUsername());
         user.setEmail(registerCredentials.getEmail());
         user.setPassword(passwordEncoder.encode(registerCredentials.getPassword()));
-        user.setRole(Set.of(Role.ROLE_ADMIN));
+        user.setRole(Set.of(Role.ROLE_USER));
         user.setEnabled(true);
         cUserService.save(user);
     }
@@ -69,6 +69,7 @@ public class CUserController
         CUser u = cUserService.getCUserByEmail(email);
         return u.getRole();
     }
+
 
 
 }

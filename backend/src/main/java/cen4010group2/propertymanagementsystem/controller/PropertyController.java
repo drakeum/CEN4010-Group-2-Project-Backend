@@ -1,6 +1,7 @@
 package cen4010group2.propertymanagementsystem.controller;
 
 import cen4010group2.propertymanagementsystem.model.CUser;
+import cen4010group2.propertymanagementsystem.model.DeleteProperty;
 import cen4010group2.propertymanagementsystem.model.NewProperty;
 import cen4010group2.propertymanagementsystem.model.Property;
 import cen4010group2.propertymanagementsystem.service.CUserService;
@@ -72,5 +73,39 @@ public class PropertyController
                 .getSubject();
         CUser u = cUserService.getCUserByEmail(email);
         return propertyService.getPropertiesByUser(u);
+    }
+
+    @DeleteMapping("/cuser/removeProperty")
+    public void removeProperty(@RequestBody DeleteProperty deleteProperty, HttpServletRequest request)
+    {
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String email = JWT.require(Algorithm.HMAC256(secret))
+                .build()
+                .verify(token.replace(TOKEN_PREFIX, ""))
+                .getSubject();
+        CUser u = cUserService.getCUserByEmail(email);
+        Long uid = u.getId();
+        Long pid = deleteProperty.getId();
+        Property property = propertyService.getPropertyById(pid);
+        if(property.getOwnerAccountID() == uid)
+        {
+            propertyService.deleteProperty(property);
+        }
+        //Make return an unauthorized error if account id isn't property's owner id
+    }
+
+    @PutMapping("/cuser/editProperty/{pid}")
+    public void editProperty(@PathVariable Long pid, @RequestBody NewProperty editProperty, HttpServletRequest httpServletRequest)
+    {
+        Property property = propertyService.getPropertyById(pid);
+        System.out.println("Old property name: " + property.getName());
+        String newName = editProperty.getName();
+        property.setName(newName);
+        System.out.println("New property name: " + newName);
+        System.out.println("Old property value: " + editProperty.getValue());
+        double newValue = editProperty.getValue();
+        property.setItemValue(newValue);
+        System.out.println("New property value: " + newValue);
+        propertyService.saveProperty(property);
     }
 }

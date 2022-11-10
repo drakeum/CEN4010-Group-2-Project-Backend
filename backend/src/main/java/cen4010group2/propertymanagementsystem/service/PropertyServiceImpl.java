@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -25,6 +26,13 @@ public class PropertyServiceImpl implements PropertyService
     public List<Property> getAllProperties()
     {
         return propertyRepository.findAll();
+    }
+
+    @Override
+    public Property getPropertyById(Long id)
+    {
+        return propertyRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Property could not be found by id."));
     }
 
     @Override
