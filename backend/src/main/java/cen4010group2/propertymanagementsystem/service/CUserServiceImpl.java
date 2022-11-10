@@ -41,4 +41,10 @@ public class CUserServiceImpl implements CUserService
         return cUserRepository.findCUserByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("User could not be found by username."));
     }
+
+    @Override
+    public void delete(CUser user)
+    {
+        cUserRepository.delete(user);
+    }
 }

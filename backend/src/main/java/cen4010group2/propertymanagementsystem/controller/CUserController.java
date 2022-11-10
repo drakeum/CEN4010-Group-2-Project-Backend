@@ -1,10 +1,13 @@
 package cen4010group2.propertymanagementsystem.controller;
 
 import cen4010group2.propertymanagementsystem.model.CUser;
+import cen4010group2.propertymanagementsystem.model.Property;
 import cen4010group2.propertymanagementsystem.model.Role;
 import cen4010group2.propertymanagementsystem.repository.CUserRepository;
+import cen4010group2.propertymanagementsystem.security.EditAccount;
 import cen4010group2.propertymanagementsystem.security.Register;
 import cen4010group2.propertymanagementsystem.service.CUserServiceImpl;
+import cen4010group2.propertymanagementsystem.service.PropertyServiceImpl;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -30,14 +34,15 @@ public class CUserController
     private final CUserRepository cUserRepository;
     private final CUserServiceImpl cUserService;
     private final PasswordEncoder passwordEncoder;
+    private final PropertyServiceImpl propertyService;
 
-    public CUserController(CUserRepository cUserRepository, CUserServiceImpl cUserService, PasswordEncoder passwordEncoder, @Value("${jwt_secret}") String secret)
+    public CUserController(CUserRepository cUserRepository, CUserServiceImpl cUserService, PasswordEncoder passwordEncoder, @Value("${jwt_secret}") String secret, PropertyServiceImpl propertyService)
     {
         this.cUserRepository = cUserRepository;
         this.cUserService = cUserService;
         this.passwordEncoder = passwordEncoder;
         this.secret = secret;
-
+        this.propertyService = propertyService;
     }
     @GetMapping("admin/getAll")
     public List<CUser> getAllCUsers()
@@ -70,6 +75,50 @@ public class CUserController
         return u.getRole();
     }
 
+    @DeleteMapping("/cuser/deleteAccount")
+    public void deleteAccount(HttpServletRequest request)
+    {
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String email = JWT.require(Algorithm.HMAC256(secret))
+                .build()
+                .verify(token.replace(TOKEN_PREFIX, ""))
+                .getSubject();
+        CUser u = cUserService.getCUserByEmail(email);
+        cUserService.delete(u);
+        List<Property> userProperties = propertyService.getPropertiesByUser(u);
+        Iterator<Property> iter = userProperties.iterator();
+        while (iter.hasNext())
+        {
+            Property p = iter.next();
+            propertyService.deleteProperty(p);
+        }
+        //Currently does not "log the user out" i.e. the JWT is still valid after account is deleted
+    }
 
+    @PutMapping("/cuser/editAccount")
+    public void editAccount(@RequestBody EditAccount editAccount, HttpServletRequest request)
+    {
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String email = JWT.require(Algorithm.HMAC256(secret))
+                .build()
+                .verify(token.replace(TOKEN_PREFIX, ""))
+                .getSubject();
+        CUser u = cUserService.getCUserByEmail(email);
+        String oldPass = editAccount.getOldPassword();
+        if(passwordEncoder.matches(oldPass, u.getPassword()))
+        {
+            System.out.println("Old password matches");
+            u.setUsername(editAccount.getUsername());
+            u.setPassword(passwordEncoder.encode(editAccount.getNewPassword()));
+            cUserService.save(u);
+            System.out.println("New password saved");
+        }
+        else
+        {
+            System.out.println("Old password did not match");
+            //Make return an error if old password isn't correct
+        }
+
+    }
 
 }
