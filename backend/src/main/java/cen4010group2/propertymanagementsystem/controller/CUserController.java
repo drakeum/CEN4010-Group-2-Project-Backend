@@ -44,7 +44,7 @@ public class CUserController
         this.secret = secret;
         this.propertyService = propertyService;
     }
-    @GetMapping("admin/getAll")
+    @GetMapping("/admin/getAll")
     public List<CUser> getAllCUsers()
     {
         return cUserRepository.findAll();
@@ -63,7 +63,7 @@ public class CUserController
         cUserService.save(user);
     }
 
-    @GetMapping("cuser/getRole")
+    @GetMapping("/cuser/getRole")
     public Set<Role> getUserRole(HttpServletRequest request)
     {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
