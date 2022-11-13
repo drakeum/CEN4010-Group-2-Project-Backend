@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeleteUser
+public class AdminDeleteUser
 {
     String email;
 }

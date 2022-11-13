@@ -1,7 +1,7 @@
 package cen4010group2.propertymanagementsystem.controller;
 
 import cen4010group2.propertymanagementsystem.model.CUser;
-import cen4010group2.propertymanagementsystem.model.DeleteUser;
+import cen4010group2.propertymanagementsystem.model.AdminDeleteUser;
 import cen4010group2.propertymanagementsystem.model.Property;
 import cen4010group2.propertymanagementsystem.model.Role;
 import cen4010group2.propertymanagementsystem.repository.CUserRepository;
@@ -45,16 +45,16 @@ public class CUserController
         this.secret = secret;
         this.propertyService = propertyService;
     }
-    @GetMapping("/admin/getAll")
+    @GetMapping("/admin/getAllUsers")
     public List<CUser> getAllCUsers()
     {
         return cUserRepository.findAll();
     }
 
     @DeleteMapping("/admin/deleteUserAccount")
-    public void deleteUserAccount(@RequestBody DeleteUser deleteUser)
+    public void deleteUserAccount(@RequestBody AdminDeleteUser adminDeleteUser)
     {
-        CUser u = cUserService.getCUserByEmail(deleteUser.getEmail());
+        CUser u = cUserService.getCUserByEmail(adminDeleteUser.getEmail());
         cUserService.delete(u);
         List<Property> userProperties = propertyService.getPropertiesByUser(u);
         Iterator<Property> iter = userProperties.iterator();
@@ -64,6 +64,7 @@ public class CUserController
             propertyService.deleteProperty(p);
         }
     }
+
     @PostMapping("/register")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void register(@RequestBody Register registerCredentials)

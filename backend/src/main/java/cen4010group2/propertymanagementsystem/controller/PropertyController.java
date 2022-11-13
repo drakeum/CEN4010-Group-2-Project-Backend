@@ -1,9 +1,6 @@
 package cen4010group2.propertymanagementsystem.controller;
 
-import cen4010group2.propertymanagementsystem.model.CUser;
-import cen4010group2.propertymanagementsystem.model.DeleteProperty;
-import cen4010group2.propertymanagementsystem.model.NewProperty;
-import cen4010group2.propertymanagementsystem.model.Property;
+import cen4010group2.propertymanagementsystem.model.*;
 import cen4010group2.propertymanagementsystem.service.CUserService;
 import cen4010group2.propertymanagementsystem.service.PropertyServiceImpl;
 import com.auth0.jwt.JWT;
@@ -41,6 +38,38 @@ public class PropertyController
         return propertyService.getAllProperties();
     }
 
+    @PostMapping("/admin/addUserProperty")
+    public void addUserProperty(@RequestBody AdminNewProperty adminNewProperty)
+    {
+        CUser u = cUserService.getCUserByEmail(adminNewProperty.getEmail());
+        Property p = new Property();
+        p.setName(adminNewProperty.getName());
+        p.setItemValue(adminNewProperty.getValue());
+        p.setCreationDate(new Timestamp(System.currentTimeMillis()));
+        p.setOwnerAccountID(u.getId());
+        propertyService.saveProperty(p);
+    }
+
+    @PutMapping("/admin/editUserProperty/{pid}")
+    public void adminEditProperty(@PathVariable Long pid, @RequestBody NewProperty editProperty)
+    {
+        Property property = propertyService.getPropertyById(pid);
+        //System.out.println("Old property name: " + property.getName());
+        String newName = editProperty.getName();
+        property.setName(newName);
+        //System.out.println("New property name: " + newName);
+        //System.out.println("Old property value: " + editProperty.getValue());
+        double newValue = editProperty.getValue();
+        property.setItemValue(newValue);
+        //System.out.println("New property value: " + newValue);
+        propertyService.saveProperty(property);
+    }
+
+    @DeleteMapping("/admin/removeUserProperty/{pid}")
+    public void adminDeleteProperty(@PathVariable Long pid)
+    {
+        propertyService.deletePropertyById(pid);
+    }
 
     @PostMapping("/cuser/addProperty")
     public void addProperty(@RequestBody NewProperty newProperty, HttpServletRequest request)
@@ -91,11 +120,11 @@ public class PropertyController
         {
             propertyService.deleteProperty(property);
         }
-        //Make return an unauthorized error if account id isn't property's owner id
+        // TODO: Make return an unauthorized error if account id isn't property's owner id
     }
 
     @PutMapping("/cuser/editProperty/{pid}")
-    public void editProperty(@PathVariable Long pid, @RequestBody NewProperty editProperty, HttpServletRequest httpServletRequest)
+    public void editProperty(@PathVariable Long pid, @RequestBody NewProperty editProperty)
     {
         Property property = propertyService.getPropertyById(pid);
         System.out.println("Old property name: " + property.getName());
@@ -107,5 +136,6 @@ public class PropertyController
         property.setItemValue(newValue);
         System.out.println("New property value: " + newValue);
         propertyService.saveProperty(property);
+        //Make it so that this verifies the editing user owns the property
     }
 }
