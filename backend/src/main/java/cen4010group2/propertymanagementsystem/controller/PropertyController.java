@@ -136,6 +136,6 @@ public class PropertyController
         property.setItemValue(newValue);
         System.out.println("New property value: " + newValue);
         propertyService.saveProperty(property);
-        //Make it so that this verifies the editing user owns the property
+        // TODO: Make it so that this verifies the editing user owns the property
     }
 }

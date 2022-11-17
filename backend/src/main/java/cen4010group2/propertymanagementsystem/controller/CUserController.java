@@ -107,7 +107,7 @@ public class CUserController
             Property p = iter.next();
             propertyService.deleteProperty(p);
         }
-        //Currently does not "log the user out" i.e. the JWT is still valid after account is deleted
+        // TODO: Currently does not "log the user out" i.e. the JWT is still valid after account is deleted
     }
 
     @PutMapping("/cuser/editAccount")
@@ -131,7 +131,7 @@ public class CUserController
         else
         {
             System.out.println("Old password did not match");
-            //Make return an error if old password isn't correct
+            // TODO: Make return an error if old password isn't correct
         }
 
     }
