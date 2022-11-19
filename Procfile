@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -Dserver.port=8080 -Dspring.profiles.active=default -jar target/cen4010group2-0.0.1-SNAPSHOT.jar
+web: java -Dserver.port=8080 -jar target/cen4010group2-0.0.1-SNAPSHOT.jar

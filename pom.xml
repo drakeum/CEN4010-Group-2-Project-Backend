@@ -74,9 +74,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>backend.src.main.java.cen4010group2.propertymanagementsystem.PropertyManagementSystemApplication</mainClass>
-                </configuration>
             </plugin>
         </plugins>
     </build>
