@@ -1,1 +1,1 @@
-web: java -Dserver.port=8080 -jar target/cen4010group2-0.0.1-SNAPSHOT.jar
+web: java -Dserver.port=8080 -jar PropertyManagementSystem/target/cen4010group2-0.0.1-SNAPSHOT.jar
