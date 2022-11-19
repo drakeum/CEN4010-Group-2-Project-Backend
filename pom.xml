@@ -82,6 +82,13 @@
                 <configuration>
                     <mainClass>cen4010group2.propertymanagementsystem.PropertyManagementSystemApplication</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
