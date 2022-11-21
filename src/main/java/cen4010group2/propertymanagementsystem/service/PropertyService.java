@@ -16,6 +16,8 @@ public interface PropertyService
     public Property saveProperty(Property property);
 
     public List<Property> getPropertiesByUser(CUser user);
+
+    public List<Property> getSharedPropertiesByUser(CUser user);
     public void deleteProperty(Property property);
 
     public void deletePropertyById(Long id);

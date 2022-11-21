@@ -1,9 +1,6 @@
 package cen4010group2.propertymanagementsystem.controller;
 
-import cen4010group2.propertymanagementsystem.model.CUser;
-import cen4010group2.propertymanagementsystem.model.AdminDeleteUser;
-import cen4010group2.propertymanagementsystem.model.Property;
-import cen4010group2.propertymanagementsystem.model.Role;
+import cen4010group2.propertymanagementsystem.model.*;
 import cen4010group2.propertymanagementsystem.repository.CUserRepository;
 import cen4010group2.propertymanagementsystem.security.EditAccount;
 import cen4010group2.propertymanagementsystem.security.Register;
@@ -134,6 +131,51 @@ public class CUserController
             // TODO: Make return an error if old password isn't correct
         }
 
+    }
+
+    @PostMapping("/cuser/share")
+    public void shareProperties(@RequestBody Share share, HttpServletRequest request)
+    {
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String email = JWT.require(Algorithm.HMAC256(secret))
+                .build()
+                .verify(token.replace(TOKEN_PREFIX, ""))
+                .getSubject();
+        CUser u1 = cUserService.getCUserByEmail(email);
+        CUser u2 = cUserService.getCUserByEmail(share.getEmail());
+        List<CUser> currentSharedWith = u1.getUsersSharedWith();
+        currentSharedWith.add(u2);
+        u1.setUsersSharedWith(currentSharedWith);
+        cUserService.save(u1);
+
+        List<CUser> currentSharedFrom = u2.getUsersSharedFrom();
+        currentSharedFrom.add(u1);
+        u2.setUsersSharedFrom(currentSharedFrom);
+        cUserService.save(u2);
+    }
+
+    @PostMapping("/cuser/unshare")
+    public void unShareProperties(@RequestBody Share share, HttpServletRequest request)
+    {
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String email = JWT.require(Algorithm.HMAC256(secret))
+                .build()
+                .verify(token.replace(TOKEN_PREFIX, ""))
+                .getSubject();
+        CUser u1 = cUserService.getCUserByEmail(email);
+        CUser u2 = cUserService.getCUserByEmail(share.getEmail());
+        List<CUser> currentSharedWith = u1.getUsersSharedWith();
+        if(currentSharedWith.contains(u2))
+        {
+            currentSharedWith.remove(u2);
+            u1.setUsersSharedWith(currentSharedWith);
+            cUserService.save(u1);
+
+            List<CUser> currentSharedFrom = u2.getUsersSharedFrom();
+            currentSharedFrom.remove(u1);
+            u2.setUsersSharedFrom(currentSharedFrom);
+            cUserService.save(u2);
+        }
     }
 
 }

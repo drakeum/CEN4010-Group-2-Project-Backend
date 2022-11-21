@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -43,6 +45,14 @@ public class CUser implements UserDetails
 
     @Column
     private boolean enabled = false;
+
+    @Column
+    @ManyToMany
+    private List<CUser> usersSharedWith;
+
+    @Column
+    @ManyToMany
+    private List<CUser> usersSharedFrom;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities()

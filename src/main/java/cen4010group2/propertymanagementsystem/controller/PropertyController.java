@@ -104,6 +104,18 @@ public class PropertyController
         return propertyService.getPropertiesByUser(u);
     }
 
+    @GetMapping("/cuser/getSharedProperties")
+    public List<Property> getSharedProperties(HttpServletRequest request)
+    {
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String email = JWT.require(Algorithm.HMAC256(secret))
+                .build()
+                .verify(token.replace(TOKEN_PREFIX, ""))
+                .getSubject();
+        CUser u = cUserService.getCUserByEmail(email);
+        return propertyService.getSharedPropertiesByUser(u);
+    }
+
     @DeleteMapping("/cuser/removeProperty")
     public void removeProperty(@RequestBody DeleteProperty deleteProperty, HttpServletRequest request)
     {

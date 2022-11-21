@@ -61,6 +61,30 @@ public class PropertyServiceImpl implements PropertyService
     }
 
     @Override
+    public List<Property> getSharedPropertiesByUser(CUser user)
+    {
+        List<Property> propSharedWithUser = new ArrayList<>();
+        List <Property> allP = getAllProperties();
+        List<CUser> sharedUsers = user.getUsersSharedFrom();
+
+        Iterator<Property> iterP = allP.iterator();
+        while(iterP.hasNext())
+        {
+            Property p = iterP.next();
+            Iterator<CUser> iterSU = sharedUsers.iterator();
+            while(iterSU.hasNext())
+            {
+                CUser u = iterSU.next();
+                if(u.getId() == p.getOwnerAccountID())
+                {
+                    propSharedWithUser.add(p);
+                }
+            }
+        }
+        return propSharedWithUser;
+    }
+
+    @Override
     public void deleteProperty(Property property)
     {
         propertyRepository.delete(property);
