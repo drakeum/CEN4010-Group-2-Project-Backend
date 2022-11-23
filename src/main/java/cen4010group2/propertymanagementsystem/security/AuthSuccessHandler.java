@@ -43,7 +43,7 @@ public class AuthSuccessHandler extends SimpleUrlAuthenticationSuccessHandler
         UserDetails principal = (UserDetails) authentication.getPrincipal();
         String token = JWT.create()
                 .withSubject(cUserServiceImpl.getCUserByUsername(principal.getUsername()).getEmail())
-                .withExpiresAt(Instant.ofEpochMilli(ZonedDateTime.now(ZoneId.systemDefault()).toInstant().toEpochMilli() + (5 * 60 * 1000)))
+                .withExpiresAt(Instant.ofEpochMilli(ZonedDateTime.now(ZoneId.systemDefault()).toInstant().toEpochMilli() + (60 * 60 * 1000)))
                 .sign(Algorithm.HMAC256(secret));
         response.addHeader("Authorization", "Bearer " + token);
         response.addHeader("Content-Type", "application/json");
