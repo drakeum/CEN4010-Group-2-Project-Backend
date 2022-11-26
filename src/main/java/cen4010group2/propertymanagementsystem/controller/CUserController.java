@@ -11,6 +11,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -179,7 +180,7 @@ public class CUserController
     }
 
     @GetMapping("/cuser/me")
-    public CUser getMe(HttpServletRequest request)
+    public ResponseEntity<?> getMe(HttpServletRequest request)
     {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         String email = JWT.require(Algorithm.HMAC256(secret))
@@ -187,7 +188,9 @@ public class CUserController
                 .verify(token.replace(TOKEN_PREFIX, ""))
                 .getSubject();
         CUser u = cUserService.getCUserByEmail(email);
-        return u;
+
+        String dataJson = "{ \"username\":\"" + u.getUsername() + "\",\"email\":\"" + u.getEmail() + "\"}" ;
+        return new ResponseEntity<>(dataJson, HttpStatus.OK);
     }
 
 }
