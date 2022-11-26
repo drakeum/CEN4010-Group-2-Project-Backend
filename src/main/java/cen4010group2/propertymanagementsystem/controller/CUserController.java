@@ -178,4 +178,16 @@ public class CUserController
         }
     }
 
+    @GetMapping("/cuser/me")
+    public CUser getMe(HttpServletRequest request)
+    {
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String email = JWT.require(Algorithm.HMAC256(secret))
+                .build()
+                .verify(token.replace(TOKEN_PREFIX, ""))
+                .getSubject();
+        CUser u = cUserService.getCUserByEmail(email);
+        return u;
+    }
+
 }
