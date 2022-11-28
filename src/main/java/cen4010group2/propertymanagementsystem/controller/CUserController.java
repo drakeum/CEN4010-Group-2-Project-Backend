@@ -52,7 +52,7 @@ public class CUserController
             return new ResponseEntity<>(null, HttpStatus.OK);
         }
 
-        String dataJson = "{";
+        String dataJson = "[{]";
 
         for(CUser u : userList)
         {
@@ -60,7 +60,7 @@ public class CUserController
         }
 
         String dataJson2 = dataJson.substring(0, dataJson.lastIndexOf(","));
-        dataJson2 += "}";
+        dataJson2 += "]";
         return new ResponseEntity<>(dataJson2, HttpStatus.OK);
     }
 
