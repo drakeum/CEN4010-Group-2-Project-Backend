@@ -44,9 +44,24 @@ public class CUserController
         this.propertyService = propertyService;
     }
     @GetMapping("/admin/getAllUsers")
-    public List<CUser> getAllCUsers()
+    public  ResponseEntity<?> getAllCUsers()
     {
-        return cUserRepository.findAll();
+        List<CUser> userList = cUserRepository.findAll();
+        if(userList.isEmpty())
+        {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+
+        String dataJson = "{";
+
+        for(CUser u : userList)
+        {
+            dataJson += "\"username\":\"" + u.getUsername() + "\",\"email\":\"" + u.getEmail() + "\"," ;
+        }
+
+        String dataJson2 = dataJson.substring(0, dataJson.lastIndexOf(","));
+        dataJson2 += "}";
+        return new ResponseEntity<>(dataJson2, HttpStatus.OK);
     }
 
     @DeleteMapping("/admin/deleteUserAccount")
@@ -188,7 +203,6 @@ public class CUserController
                 .verify(token.replace(TOKEN_PREFIX, ""))
                 .getSubject();
         CUser u = cUserService.getCUserByEmail(email);
-
         String dataJson = "{ \"username\":\"" + u.getUsername() + "\",\"email\":\"" + u.getEmail() + "\"}" ;
         return new ResponseEntity<>(dataJson, HttpStatus.OK);
     }
