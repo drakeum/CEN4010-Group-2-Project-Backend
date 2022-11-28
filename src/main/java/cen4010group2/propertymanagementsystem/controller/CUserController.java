@@ -56,7 +56,7 @@ public class CUserController
 
         for(CUser u : userList)
         {
-            dataJson += "\"username\":\"" + u.getUsername() + "\",\"email\":\"" + u.getEmail() + "\"," ;
+            dataJson += "{\"username\":\"" + u.getUsername() + "\",\"email\":\"" + u.getEmail() + "\"}," ;
         }
 
         String dataJson2 = dataJson.substring(0, dataJson.lastIndexOf(","));
