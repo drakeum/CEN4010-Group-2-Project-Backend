@@ -78,6 +78,15 @@ public class CUserController
         }
     }
 
+    @GetMapping("/admin/getUserById/{uid}")
+    public ResponseEntity<?> getUserByIdAdmin(@PathVariable Long uid)
+    {
+        CUser u = cUserRepository.getReferenceById(uid);
+        String dataJson = "{ \"username\":\"" + u.getUsername() + "\",\"email\":\"" + u.getEmail() + "\"}" ;
+        return new ResponseEntity<>(dataJson, HttpStatus.OK);
+
+    }
+
     @PostMapping("/register")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void register(@RequestBody Register registerCredentials)
